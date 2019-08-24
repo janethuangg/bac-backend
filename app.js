@@ -12,6 +12,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/subscribe', (req, res) => {
     // send to mailchimp
+    console.log(req.body.email);
+    res.sendStatus(200);
 
 });
 
