@@ -4,6 +4,7 @@ const csv = require('csv-parser');
 const fs = require('fs');
 const cors = require('cors');
 const request = require('superagent');
+const queryString = require('query-string');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -69,5 +70,87 @@ app.get('/attendance/:netID', (req, res) => {
         });
     }
 });
+
+const GOOGLE_CAL_URL = 'https://www.googleapis.com/calendar/v3/calendars/';
+const API_KEY = 'AIzaSyABek6rqw9ZTqA9vZLJ84YTA1YG0cgDMWE';
+const CALENDAR_ID = 'analytic@stern.nyu.edu';
+const TIME_FORMAT = {
+    hour: '2-digit',
+    minute:'2-digit'
+};
+
+app.get('/calendar/:count', (req, res) => {
+    const count =  parseInt(req.params.count);
+
+    const params = {
+        timeMin: (new Date()).toISOString(),
+        showDeleted: false,
+        singleEvents: true,
+        orderBy: 'startTime',
+        key: API_KEY
+    };
+
+    request
+        .get(GOOGLE_CAL_URL + CALENDAR_ID + '/events?' + queryString.stringify(params))
+        .then((data) => {
+            const items = data.body.items;
+            let iterator = -1;
+            if(count === 0){
+                // 0 signifies all calendar items
+                iterator = items.length;
+            } else {
+                iterator = Math.min(items.length, count);
+            }
+
+            calendar = [];
+
+            for(let i = 0; i < iterator; i++){
+                let currItem = items[i];
+                const info = create_datetime_location(currItem);
+                const date = currItem.start.dateTime ? currItem.start.dateTime : currItem.start.date;
+                const month = new Date(date).getMonth();
+                let calItem = {
+                    title: currItem.summary,
+                    ...info,
+                    month: get_month_name(month)
+                };
+                calendar.push(calItem);
+            }
+            res.json({ 'data': calendar });
+        });
+
+});
+
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+function get_month_name(monthNumber) {
+    return months[monthNumber];
+}
+
+function create_datetime_location(event) {
+    const start = event.start;
+    let result = {
+        time: '',
+        location: ''
+    };
+    if (start.dateTime) {
+        const dateTime = new Date(start.dateTime);
+        result['time'] = dateTime.toLocaleDateString("en-US") + "  " + dateTime.toLocaleTimeString("en-US", TIME_FORMAT);
+    } else if (start.date) {
+        result['time'] = new Date(start.date).toLocaleDateString("en-US");
+    }
+
+    const end = event.end;
+    if (end.dateTime) {
+        const dateTime = new Date(end.dateTime);
+        result['time'] += " - " + dateTime.toLocaleTimeString("en-US", TIME_FORMAT);
+    }
+
+    const loc = event.location;
+    if (loc) {
+        result['location'] = "Location: " + loc;
+    }
+
+    return result;
+}
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
