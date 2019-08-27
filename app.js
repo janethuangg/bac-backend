@@ -113,7 +113,10 @@ app.get('/calendar/:count', (req, res) => {
                 let calItem = {
                     title: currItem.summary,
                     ...info,
-                    month: get_month_name(month)
+                    month: get_month_name(month),
+                    summary: currItem.summary,
+                    description: currItem.description
+
                 };
                 calendar.push(calItem);
             }
