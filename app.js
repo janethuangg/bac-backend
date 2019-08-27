@@ -47,7 +47,7 @@ app.post('/subscribe', (req, res) => {
 });
 
 app.get('/attendance/:netID', (req, res) => {
-    const netID = req.params.netID;
+    const netID = req.params.netID.toLowerCase();
     if(netID in attendanceTracker){
         const attendance = attendanceTracker[netID];
         const output = `You have attended ${attendance} BAC meetings.`;
