@@ -76,7 +76,8 @@ const API_KEY = 'AIzaSyABek6rqw9ZTqA9vZLJ84YTA1YG0cgDMWE';
 const CALENDAR_ID = 'analytic@stern.nyu.edu';
 const TIME_FORMAT = {
     hour: '2-digit',
-    minute:'2-digit'
+    minute:'2-digit',
+    timeZone: 'America/New_York'
 };
 
 app.get('/calendar/:count', (req, res) => {
