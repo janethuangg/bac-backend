@@ -8,16 +8,6 @@ const queryString = require('query-string');
 const app = express();
 const port = process.env.PORT || 3000;
 
-let attendanceTracker = {};
-
-(() => {
-    fs.createReadStream('AttendanceTracking.csv')
-        .pipe(csv())
-        .on('data', (row) => {
-            attendanceTracker[row["netID"]] = row["attendance"];
-        });
-})();
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -48,27 +38,37 @@ app.post('/subscribe', (req, res) => {
 
 app.get('/attendance/:netID', (req, res) => {
     const netID = req.params.netID.toLowerCase();
-    if(netID in attendanceTracker){
-        const attendance = attendanceTracker[netID];
-        const output = `You have attended ${attendance} BAC meetings.`;
-        if(attendance >= 5){
-            res.json({
-                attendanceMsg: output,
-                additionalInfo: "Congratulations, you have achieved Prime Status! Access special resources on the BAC Prime Google Drive."
-            });
-        } else {
-            res.json({
-                attendanceMsg: output,
-                additionalInfo: `You are a BAC General Member. You must attend ${5 - attendance} more meetings to achieve Prime Status.`
-            });
-        }
-
-    } else {
-        res.json({
-            attendanceMsg: "You have not attended any BAC meetings.",
-            additionalInfo: ""
+    console.log(netID);
+    let found = false;
+    fs.createReadStream('AttendanceTracking.csv')
+        .pipe(csv())
+        .on('data', (row) => {
+            console.log(row);
+            if(netID === row["netID"]){
+                const attendance = parseInt(row["attendance"]);
+                const output = `You have attended ${attendance} BAC meetings.`;
+                found = true;
+                if(attendance >= 5){
+                    res.json({
+                        attendanceMsg: output,
+                        additionalInfo: "Congratulations, you have achieved Prime Status! Access special resources on the BAC Prime Google Drive."
+                    });
+                } else {
+                    res.json({
+                        attendanceMsg: output,
+                        additionalInfo: `You are a BAC General Member. You must attend ${5 - attendance} more meetings to achieve Prime Status.`
+                    });
+                }
+            }
+        })
+        .on('end', () => {
+            if(found === false){
+                res.json({
+                    attendanceMsg: "You have not attended any BAC meetings.",
+                    additionalInfo: ""
+                });
+            }
         });
-    }
 });
 
 const GOOGLE_CAL_URL = 'https://www.googleapis.com/calendar/v3/calendars/';
