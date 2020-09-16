@@ -101,7 +101,10 @@ app.get("/calendar/:count", (req, res) => {
     orderBy: "startTime",
     key: API_KEY,
   };
-
+  //if we want to include past events
+  if (count === 0) {
+    params["timeMin"] = new Date(2020, 0, 1).toISOString();
+  }
   request
     .get(
       GOOGLE_CAL_URL + CALENDAR_ID + "/events?" + queryString.stringify(params)
@@ -110,8 +113,6 @@ app.get("/calendar/:count", (req, res) => {
       const items = data.body.items;
       let iterator = -1;
       if (count === 0) {
-        // 0 signifies all calendar items
-        params[timeMin] = new Date(2020, 8, 1).toISOString();
         iterator = items.length;
       } else {
         iterator = Math.min(items.length, count);
