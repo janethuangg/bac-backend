@@ -51,7 +51,6 @@ app.get("/attendance/:netID", (req, res) => {
   fs.createReadStream("AttendanceTracking.csv")
     .pipe(csv())
     .on("data", (row) => {
-      console.log(row);
       if (netID === row["netID"]) {
         const attendance = parseInt(row["attendance"]);
         const output = `You have attended ${attendance} BAC meetings.`;
