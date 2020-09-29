@@ -46,13 +46,12 @@ app.post("/subscribe", (req, res) => {
 
 app.get("/attendance/:netID", (req, res) => {
   const netID = req.params.netID.toLowerCase();
-  console.log(netID);
   let found = false;
-  fs.createReadStream("AttendanceTracking.csv")
+  fs.createReadStream("attendance.csv")
     .pipe(csv())
     .on("data", (row) => {
-      if (netID === row["netID"]) {
-        const attendance = parseInt(row["attendance"]);
+      if (netID === row["Campus Email"].split("@")[0]) {
+        const attendance = parseInt(row["Total"]);
         const output = `You have attended ${attendance} BAC meetings.`;
         found = true;
         if (attendance >= 5) {
