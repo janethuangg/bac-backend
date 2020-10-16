@@ -52,6 +52,7 @@ app.get("/attendance/:netID", (req, res) => {
     .on("data", (row) => {
       if (netID === row["Campus Email"].split("@")[0]) {
         const attendance = parseInt(row["Total"]);
+        const interviewee = parseInt(row["Insight Team Interviewee"]);
         const output = `You have attended ${attendance} BAC meetings.`;
         found = true;
         if (attendance >= 5) {
@@ -60,7 +61,14 @@ app.get("/attendance/:netID", (req, res) => {
             additionalInfo:
               "Congratulations, you have achieved Prime Status! Access special resources on the BAC Prime Google Drive.",
           });
-        } else {
+        } else if (interviewee === 1) {
+          res.json({
+            attendanceMsg: output,
+            additionalInfo:
+              "As an Insight Team interviewee, you are now a prime member! Access special resources on the BAC Prime Google Drive.",
+          });
+        }
+        else {
           res.json({
             attendanceMsg: output,
             additionalInfo: `You are a BAC General Member. You must attend ${
