@@ -61,7 +61,7 @@ app.get("/attendance/:netID", (req, res) => {
             additionalInfo:
             `
               <div>
-              Congratulations, you have achieved Prime Status! Access workshop resources <u><a target="_blank" href="https://docs.google.com/forms/d/1-NFhVQ--SjrBZlk8cOYBWcb8CY96w15os8m-t0QyF_E/viewform?edit_requested=true">here</a></u> and connect with alumni <u><a target="_blank" href="https://github.com/janethuangg/BAC_workshops">here</a></u>.
+              Congratulations, you have achieved Prime Status! Access workshop resources <u><a target="_blank" href="https://github.com/janethuangg/BAC_workshops">here</a></u> and connect with alumni <u><a target="_blank" href="https://docs.google.com/forms/d/1-NFhVQ--SjrBZlk8cOYBWcb8CY96w15os8m-t0QyF_E/viewform?edit_requested=true">here</a></u>.
               </div>
             `
           });
@@ -71,7 +71,7 @@ app.get("/attendance/:netID", (req, res) => {
             additionalInfo:
               `
               <div>
-                As an Insight Team interviewee, you are now a prime member! Access workshop resources <u><a target="_blank" href="https://docs.google.com/forms/d/1-NFhVQ--SjrBZlk8cOYBWcb8CY96w15os8m-t0QyF_E/viewform?edit_requested=true">here</a></u> and connect with alumni <u><a target="_blank" href="https://github.com/janethuangg/BAC_workshops">here</a></u>.
+                As an Insight Team interviewee, you are now a prime member! Access workshop resources <u><a target="_blank" href="https://github.com/janethuangg/BAC_workshops">here</a></u> and connect with alumni <u><a target="_blank" href="https://docs.google.com/forms/d/1-NFhVQ--SjrBZlk8cOYBWcb8CY96w15os8m-t0QyF_E/viewform?edit_requested=true">here</a></u>.
               </div>
               `
           });
