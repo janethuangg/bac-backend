@@ -68,7 +68,7 @@ app.get("/attendance/:netID", (req, res) => {
               `
               <div>
                 As an Insight Team interviewee, you are now a prime member! Access special resources on the BAC Prime Google Drive.
-                <a href="https://github.com/janethuangg/BAC_workshops">Workshops</a>
+                <u><a href="https://github.com/janethuangg/BAC_workshops">Workshops</a></u>
               </div>
               `
           });
